@@ -1,35 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { apiRoute } from "./lib/api";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [homeObject, setHomeObject] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const API_TOKEN = import.meta.env.VITE_API_TOKEN;
+
+  useEffect(() => {
+    const fetchObjectHome = async () => {
+      try {
+        const response = await axios.get(apiRoute.home, {
+          headers: {
+            Authorization: `Bearer ${API_TOKEN}`,
+          },
+        });
+
+        // 👇 aquí el cambio clave
+        setHomeObject(response.data.data);
+      } catch (err) {
+        setError("Ha ocurrido un error: " + err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchObjectHome();
+  }, [API_TOKEN]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-black">
+        <h1 className="text-xl text-white">
+          Cargando, por favor espere...
+        </h1>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-black">
+        <h1 className="text-xl text-red-500">{error}</h1>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="p-4">
+      <h1 className="text-2xl font-bold">
+        {homeObject?.enterprise_name}
+      </h1>
+    </div>
+  );
 }
 
-export default App
+export default App;
