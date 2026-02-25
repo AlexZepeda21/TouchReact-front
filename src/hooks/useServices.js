@@ -22,7 +22,9 @@ export default function useServices() {
                 );
                 setServices(response.data.data || []);
             } catch (err) {
-                setError(err);
+                setError(
+                    err.response?.data?.error?.message 
+                );
             } finally {
                 setLoading(false);
             }

@@ -44,16 +44,16 @@ export default function Header() {
               {t.header.about}
             </NavLink>
 
-            <NavLink to="/aboutus" className={linkClass}>
-              {t.header.about}
+            <NavLink to="/blog" className={linkClass}>
+              blog
             </NavLink>
 
-            <NavLink to="/aboutus" className={linkClass}>
-              {t.header.about}
+            <NavLink to="/employment" className={linkClass}>
+              employment
             </NavLink>
 
-            <NavLink to="/aboutus" className={linkClass}>
-              {t.header.about}
+            <NavLink to="/contact" className={linkClass}>
+              contact
             </NavLink>
           </nav>
 
