@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+.text-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* número de líneas a mostrar */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
