@@ -4,6 +4,8 @@ export const apiRoute = {
     home: `${API_URL}/home`,
     services: `${API_URL}/services?populate=*`,
     about: `${API_URL}/about?populate=*`,
+    ourProcess: `${API_URL}/our-stories`,
+    whyTouches: `${API_URL}/why-touches`,
 };
 
 export const resource = {
