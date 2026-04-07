@@ -4,8 +4,9 @@ import { apiRoute } from "../lib/api";
 
 export default function useAboutus() {
     const [aboutInfo, setAboutInfo] = useState(null);
+    const [error, setError] = useState(null); 
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+
 
     const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
@@ -17,7 +18,6 @@ export default function useAboutus() {
                         Authorization: `Bearer ${API_TOKEN}`
                     }
                 });
-
                 setAboutInfo(response.data.data);
             } catch (err) {
                 setError(err.message);

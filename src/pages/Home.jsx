@@ -45,7 +45,7 @@ export default function Home() {
 
             {/* SECCIÓN  */}
             <section className="py-16">
-                <Services></Services>
+                <Services/>
             </section>
 
             {/* CTA FINAL */}

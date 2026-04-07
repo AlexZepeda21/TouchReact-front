@@ -6,6 +6,9 @@ export const apiRoute = {
     about: `${API_URL}/about?populate=*`,
     ourProcess: `${API_URL}/our-stories`,
     whyTouches: `${API_URL}/why-touches`,
+    blogs: `${API_URL}/blogs`,
+    employments: `${API_URL}/vacantes?populate=*`,
+
 };
 
 export const resource = {

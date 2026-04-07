@@ -1,138 +1,139 @@
+import { useState } from "react";
+
 export default function Contact() {
-  return (
-    <>
-      <h1>Estoy en contact</h1>
-    </>
-  )
-}
-/* 
----
-// components
-import "bootstrap/dist/css/bootstrap.min.css";
-import "../../styles/contactme.css";
-// import Btncode from "../Buttons/BtnCode"; // Lo comenté porque necesitamos un botón de submit nativo o modificar este componente
+  const [status, setStatus] = useState("");
+  const [statusColor, setStatusColor] = useState("");
 
-// Si deseas usar tu BtnCode como submit, este debe aceptar type="submit" y onClick, no un link.
----
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-<div class="presentation-container">
-  <div class="container-insideContactme">
-    <form id="contactForm">
-      <h1 class="name-title">Contactame</h1>
-      <div class="w-full rounded-xl p-9 shadow-2xl">
-        
-        <div class="form-group">
-          <h1 class="tittle-contact" style="color: white;">
-            Ingrese su correo electrónico
-          </h1>
-          <input
-            type="email"
-            name="email" 
-            class="form-control"
-            placeholder="ejemplo@correo.com"
-            style="color: aliceblue;"
-            required
-          />
-        </div>
+    const form = event.target;
+    const formData = new FormData(form);
 
-        <div class="form-group">
-          <h1 class="tittle-contact" style="color: white;">
-            ¿Cuál es su nombre?
-          </h1>
-          <input
-            type="text"
-            name="name"
-            class="form-control"
-            placeholder="Escribe tu nombre"
-            style="color: aliceblue;"
-            required
-          />
-        </div>
+    setStatus("Enviando...");
+    setStatusColor("text-yellow-500");
 
-        <div class="form-group">
-          <h1 class="tittle-contact" style="color: white;">
-            ¿Cuál es su número telefónico?
-          </h1>
-          <input
-            type="tel"
-            name="phone"
-            class="form-control"
-            placeholder="Tu número"
-            style="color: aliceblue;"
-          />
-        </div>
+    try {
+      const response = await fetch("https://formspree.io/f/xzdadyjb", {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" },
+      });
 
-        <div class="form-group">
-          <h1 class="tittle-contact" style="color: white;">Motivo</h1>
-          <textarea
-            name="message"
-            class="form-control"
-            placeholder="Escribe el motivo"
-            style="color: aliceblue;"
-            required
-          />
-        </div>
+      if (response.ok) {
+        setStatus("¡Gracias! Tu mensaje ha sido enviado.");
+        setStatusColor("text-green-600");
+        form.reset();
+      } else {
+        const data = await response.json();
 
-        <div style="color: white; margin-top: 20px;">
-          <button type="submit" class="btn btn-primary btn-lg w-100">
-             Enviar Mensaje
-          </button>
-        </div>
-
-        <p id="form-status" style="margin-top: 15px; font-weight: bold;"></p>
-
-      </div>
-    </form>
-  </div>
-</div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById('contactForm') as HTMLFormElement | null;
-    const status = document.getElementById('form-status') as HTMLElement | null;
-
-    if (!form || !status) return;
-
-    form.addEventListener('submit', async function(event) {
-      event.preventDefault();
-      
-      const formData = new FormData(form);
-      status.innerHTML = "Enviando...";
-      status.style.color = "yellow";
-
-      try {
-        const response = await fetch("https://formspree.io/f/xzdadyjb", {
-          method: "POST",
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          status.innerHTML = "¡Gracias! Tu mensaje ha sido enviado.";
-          status.style.color = "#00ff00";
-          form.reset();
+        if (data.errors) {
+          setStatus(data.errors.map((error) => error.message).join(", "));
         } else {
-          const data = await response.json();
-          if (data.errors) {
-            status.innerHTML = data.errors
-              .map((error: any) => error.message)
-              .join(", ");
-          } else {
-            status.innerHTML = "Hubo un problema al enviar el formulario.";
-          }
-          status.style.color = "red";
+          setStatus("Hubo un problema al enviar el formulario.");
         }
-      } catch (error) {
-        status.innerHTML = "Error de conexión. Intenta nuevamente.";
-        status.style.color = "red";
+
+        setStatusColor("text-red-600");
       }
-    });
-  });
-</script>
+    } catch (error) {
+      setStatus("Error de conexión. Intenta nuevamente.");
+      setStatusColor("text-red-600");
+    }
+  };
 
+  return (
+    <section className="py-24 bg-white">
+      <div className="max-w-4xl mx-auto px-6">
 
+        {/* Encabezado */}
+        <div className="text-center mb-14">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+            Contáctanos
+          </h1>
+          <p className="text-gray-500 mt-4">
+            Estamos listos para ayudarte. Envíanos un mensaje.
+          </p>
+        </div>
 
+        {/* Card */}
+        <div className="bg-white shadow-xl rounded-3xl p-10 border border-gray-100">
+          <form onSubmit={handleSubmit} className="space-y-8">
 
-*/
+            {/* Grid para nombre y email */}
+            <div className="grid md:grid-cols-2 gap-6">
+
+              <div>
+                <label className="block text-gray-700 mb-2 font-medium">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  placeholder="Tu nombre"
+                  className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-700 mb-2 font-medium">
+                  Correo electrónico
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="ejemplo@correo.com"
+                  className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                />
+              </div>
+
+            </div>
+
+            {/* Teléfono */}
+            <div>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Número telefónico
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Opcional"
+                className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              />
+            </div>
+
+            {/* Mensaje */}
+            <div>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Motivo
+              </label>
+              <textarea
+                name="message"
+                required
+                rows="5"
+                placeholder="Escribe tu mensaje aquí..."
+                className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              />
+            </div>
+
+            {/* Botón */}
+            <button
+              type="submit"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 transition text-white font-semibold py-3 rounded-xl shadow-md hover:shadow-lg"
+            >
+              Enviar mensaje
+            </button>
+
+            {/* Estado */}
+            {status && (
+              <p className={`mt-4 text-center font-medium ${statusColor}`}>
+                {status}
+              </p>
+            )}
+          </form>
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -93,12 +93,25 @@ export default function Header() {
       {isOpen && (
         <div className="md:hidden border-t border-gray-200 bg-white">
           <div className="px-6 py-4 flex flex-col gap-4">
+            {/* Desktop Navigation */}
             <NavLink to="/" className={linkClass}>
               {t.header.home}
             </NavLink>
 
             <NavLink to="/aboutus" className={linkClass}>
               {t.header.about}
+            </NavLink>
+
+            <NavLink to="/blog" className={linkClass}>
+              blog
+            </NavLink>
+
+            <NavLink to="/employment" className={linkClass}>
+              employment
+            </NavLink>
+
+            <NavLink to="/contact" className={linkClass}>
+              contact
             </NavLink>
 
             <div className="flex gap-4 pt-2 border-t border-gray-100">
