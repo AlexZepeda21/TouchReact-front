@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { resource } from "../lib/api";
+
 
 export default function useCallResource() {
     const [banner, setBanner] = useState(null);

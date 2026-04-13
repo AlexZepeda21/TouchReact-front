@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "./layouts/header";
-import Footer from "./layouts/footer";
+import Header from "./layouts/Header";
+import Footer from "./layouts/Footer";
 
 import Home from "./pages/Home";
 import Aboutus from "./pages/Aboutus";
 import ServicesTarget from "./components/ServicesTarget";
+import Employment from "./pages/Employment";
 import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
-import Employment from "./pages/Employment";
 
 function App() {
   return (

@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { apiRoute } from "../lib/api";
+import { getMediaUrl } from "../lib/media";
 
 export default function useMain() {
-  const [home, setHome] = useState(null);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
   useEffect(() => {
-    const fetchObjectHome = async () => {
+    const fetchHome = async () => {
       try {
-        const response = await axios.get(
-          `${apiRoute.home}?populate[icon]=true`,
+        const res = await axios.get(
+          `${apiRoute.home}?populate=*`,
           {
             headers: {
               Authorization: `Bearer ${API_TOKEN}`,
@@ -21,22 +22,24 @@ export default function useMain() {
           }
         );
 
-        setHome(response.data.data);
+        const raw = res.data?.data;
+
+        const normalized = {
+          enterprise_name: raw?.enterprise_name ?? "",
+          description: raw?.description ?? "",
+          icon: getMediaUrl(raw?.icon),
+        };
+
+        setData(normalized);
       } catch (err) {
-        setError(err.message);
+        setError(err?.message || "Error loading home");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchObjectHome();
+    fetchHome();
   }, []);
 
-  return {
-    error,
-    enterprise_name: home?.enterprise_name,
-    description: home?.description,
-    icon: home?.icon?.url,
-    loading,
-  };
+  return { data, loading, error };
 }

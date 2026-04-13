@@ -5,14 +5,14 @@ import Loading from "../components/Loading";
 export default function Blog() {
   const { blog, loading, error } = useBlog();
 
-  if (loading) return <Loading />;
+  if (loading || !blog) return <Loading />;
   if (error) return <Error message={error} />;
 
   return (
     <main className="bg-gray-50 min-h-screen py-20">
       <div className="max-w-6xl mx-auto px-6">
 
-        {/* Título sección */}
+        {/* HEADER */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
             Nuestro Blog
@@ -22,47 +22,50 @@ export default function Blog() {
           </p>
         </div>
 
-        {/* Grid de publicaciones */}
+        {/* GRID */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           {blog.map((post) => (
             <article
               key={post.id}
               className="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden flex flex-col"
             >
-              {/* Imagen opcional */}
+
+              {/* IMAGE */}
               {post.image && (
                 <img
                   src={post.image}
-                  alt={post.title}
+                  alt={post.title || "Blog image"}
                   className="h-48 w-full object-cover"
                 />
               )}
 
               <div className="p-6 flex flex-col flex-grow">
-                {/* Fecha */}
+
+                {/* DATE */}
                 <p className="text-sm text-gray-400 mb-2">
                   {post.date}
                 </p>
 
-                {/* Título */}
+                {/* TITLE */}
                 <h2 className="text-2xl font-bold text-gray-800 mb-3">
                   {post.title}
                 </h2>
 
-                {/* Autor */}
+                {/* AUTHOR */}
                 <p className="text-sm text-gray-500 mb-4">
-                  {post.author} — {post.position}
+                  {post.author} {post.position ? `— ${post.position}` : ""}
                 </p>
 
-                {/* Descripción */}
+                {/* DESCRIPTION */}
                 <p className="text-gray-600 mb-6 flex-grow">
                   {post.description}
                 </p>
 
-                {/* Botón */}
+                {/* BUTTON */}
                 <button className="mt-auto bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition">
                   Ver más
                 </button>
+
               </div>
             </article>
           ))}

@@ -13,11 +13,22 @@ export default function useS6process() {
     const fetchProcess = async () => {
       try {
         const response = await axios.get(apiRoute.ourProcess, {
-          headers: { Authorization: `Bearer ${API_TOKEN}` }
+          headers: { Authorization: `Bearer ${API_TOKEN}` },
         });
-        setS6process(response.data.data || []);
+
+        const raw = response.data?.data || [];
+
+        
+        const normalized = raw.map((step) => ({
+          id: step?.id,
+          step_number: step?.step_number ?? 0,
+          title: step?.title ?? "",
+          description: step?.description ?? "",
+        }));
+
+        setS6process(normalized);
       } catch (err) {
-        setError(err.message);
+        setError(err.message || "Error loading process");
       } finally {
         setLoading(false);
       }
@@ -26,5 +37,9 @@ export default function useS6process() {
     fetchProcess();
   }, []);
 
-  return { steps: s6process, loading, error };
+  return {
+    steps: s6process,
+    loading,
+    error,
+  };
 }

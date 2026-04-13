@@ -1,42 +1,45 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { apiRoute } from "../lib/api";
 
 export default function useAboutus() {
-    const [aboutInfo, setAboutInfo] = useState(null);
-    const [error, setError] = useState(null); 
-    const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
-    const API_TOKEN = import.meta.env.VITE_API_TOKEN;
+  useEffect(() => {
+    const fetchAbout = async () => {
+      try {
+        const res = await axios.get(apiRoute.about, {
+          headers: {
+            Authorization: `Bearer ${API_TOKEN}`,
+          },
+        });
 
-    useEffect(() => {
-        const fetchAbout = async () => {
-            try {
-                const response = await axios.get(apiRoute.about, {
-                    headers: {
-                        Authorization: `Bearer ${API_TOKEN}`
-                    }
-                });
-                setAboutInfo(response.data.data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
+        const raw = res.data?.data;
+
+        
+        const normalized = {
+          title: raw?.title ?? "",
+          subtitle: raw?.subtitle ?? "",
+          description: raw?.description ?? "",
+          mission: raw?.mission ?? "",
+          vision: raw?.vision ?? "",
+          story: raw?.story ?? "",
         };
 
-        fetchAbout();
-    }, []);
-
-    return {
-        title: aboutInfo?.title,
-        subtitle: aboutInfo?.subtitle,
-        description: aboutInfo?.description,
-        mission: aboutInfo?.mission,
-        vision: aboutInfo?.vision,
-        story: aboutInfo?.story,
-        loading,
-        error
+        setData(normalized);
+      } catch (err) {
+        setError(err.message || "Error loading about");
+      } finally {
+        setLoading(false);
+      }
     };
+
+    fetchAbout();
+  }, []);
+
+  return { data, loading, error };
 }
